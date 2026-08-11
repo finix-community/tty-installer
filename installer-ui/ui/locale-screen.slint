@@ -1,0 +1,245 @@
+import { ListView } from "std-widgets.slint";
+import { Theme } from "./theme.slint";
+import { ActionLabel } from "./widgets/action-label.slint";
+import { StepBar } from "./widgets/step-bar.slint";
+import { Hairline } from "./widgets/hairline.slint";
+import { ListItem } from "./locale/list-item.slint";
+import { CategoryRow } from "./locale/category-row.slint";
+import { ResultRow } from "./locale/result-row.slint";
+
+export component LocaleScreen inherits Rectangle {
+    width: 100%;
+    height: 100%;
+    forward-focus: key-handler;
+
+    in property <[ListItem]> visible-items: [];
+    in property <int> match-count: 0;
+    in property <string> selected-code: "";
+    in property <int> selected-index: 0;
+
+    in property <string> language-value: "";
+    in property <string> keyboard-value: "";
+    in property <string> timezone-value: "";
+    in property <string> locale-format-value: "";
+
+    in property <int> active-category: 2;
+    in property <float> gutter-scale: 1.0;
+    in property <string> filter-text: "";
+    in property <string> load-error: "";
+
+    callback category-selected(int);
+    callback filter-char-typed(string);
+    callback filter-backspace();
+    callback item-selected(string);
+    callback back();
+    callback continue-pressed();
+    callback move-selection(int);
+
+    changed selected-index => {
+        list.viewport-y = -(selected-index * Theme.row-height) + list.height / 2 > 0px
+            ? 0px
+            : -(selected-index * Theme.row-height) + list.height / 2;
+    }
+
+    VerticalLayout {
+        StepBar { active-step: "locale"; }
+
+        HorizontalLayout {
+            vertical-stretch: 1;
+            horizontal-stretch: 1;
+
+            Rectangle {
+                width: Theme.rail-width * gutter-scale;
+
+                VerticalLayout {
+                    padding-top: Theme.gutter-outer;
+                    alignment: start;
+
+                    CategoryRow {
+                        category-label: "language";
+                        current-value: language-value;
+                        active: active-category == 0;
+                        clicked => { root.category-selected(0); }
+                    }
+                    CategoryRow {
+                        category-label: "keyboard layout";
+                        current-value: keyboard-value;
+                        active: active-category == 1;
+                        clicked => { root.category-selected(1); }
+                    }
+                    CategoryRow {
+                        category-label: "timezone";
+                        current-value: timezone-value;
+                        active: active-category == 2;
+                        clicked => { root.category-selected(2); }
+                    }
+                    CategoryRow {
+                        category-label: "locale format";
+                        current-value: locale-format-value;
+                        active: active-category == 3;
+                        clicked => { root.category-selected(3); }
+                    }
+                }
+
+                Rectangle {
+                    x: parent.width - 1px;
+                    width: 1px;
+                    height: parent.height;
+                    background: Theme.border;
+                }
+            }
+
+            Rectangle {
+                horizontal-stretch: 1;
+
+                VerticalLayout {
+                    padding-top: Theme.gutter-outer;
+                    padding-bottom: Theme.gutter-outer;
+                    padding-left: Theme.list-gutter * gutter-scale;
+                    padding-right: Theme.list-gutter * gutter-scale;
+
+                    HorizontalLayout {
+                        padding-bottom: 22px;
+                        spacing: 16px;
+
+                        Text {
+                            text: ">";
+                            color: Theme.text-quiet;
+                            font-size: Theme.font-title;
+                            vertical-alignment: center;
+                        }
+                        Text {
+                            text: filter-text;
+                            color: Theme.text-primary;
+                            font-size: Theme.font-title;
+                            vertical-alignment: center;
+                        }
+                        Rectangle {
+                            width: 3px;
+                            height: 22px;
+                            background: Theme.accent;
+                        }
+                        Text {
+                            text: "\{match-count} matches";
+                            color: Theme.text-tertiary;
+                            font-size: Theme.font-info;
+                            vertical-alignment: center;
+                            horizontal-alignment: right;
+                            horizontal-stretch: 1;
+                        }
+                    }
+
+                    Hairline {}
+
+                    if load-error != "" : VerticalLayout {
+                        padding-top: 12px;
+                        Text {
+                            text: load-error;
+                            color: Theme.error;
+                            font-size: Theme.font-info;
+                            wrap: word-wrap;
+                        }
+                    }
+
+                    if load-error == "" && filter-text != "" && match-count == 0 : VerticalLayout {
+                        padding-top: 12px;
+                        Text {
+                            text: "no matching entries";
+                            color: Theme.text-tertiary;
+                            font-size: Theme.font-info;
+                        }
+                    }
+
+                    list := ListView {
+                        vertical-stretch: 1;
+
+                        for item[idx] in visible-items : ResultRow {
+                            row-code: item.code;
+                            row-label: item.label;
+                            selected: item.code == selected-code;
+                            clicked => { root.item-selected(item.code); }
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            height: Theme.locale-footer-height;
+            horizontal-stretch: 1;
+
+            HorizontalLayout {
+                padding-left: Theme.gutter-outer;
+                padding-right: Theme.gutter-outer;
+                alignment: space-between;
+
+                Text {
+                    text: "\{match-count} matches";
+                    color: Theme.text-quiet;
+                    font-size: Theme.font-info;
+                    vertical-alignment: center;
+                }
+
+                HorizontalLayout {
+                    spacing: Theme.gutter-outer;
+                    ActionLabel {
+                        label: "< back";
+                        label-color: Theme.text-tertiary;
+                        clicked => { root.back(); }
+                    }
+                    ActionLabel {
+                        label: "continue >";
+                        label-color: Theme.accent;
+                        clicked => { root.continue-pressed(); }
+                    }
+                }
+            }
+
+            Hairline {
+                y: 0px;
+                width: parent.width;
+            }
+        }
+    }
+
+    key-handler := FocusScope {
+        key-pressed(event) => {
+            if (event.text == Key.RightArrow) {
+                root.category-selected(root.active-category < 3 ? root.active-category + 1 : 3);
+                return accept;
+            }
+            if (event.text == Key.LeftArrow) {
+                root.category-selected(root.active-category > 0 ? root.active-category - 1 : 0);
+                return accept;
+            }
+            if (event.text == Key.DownArrow) {
+                root.move-selection(1);
+                return accept;
+            }
+            if (event.text == Key.UpArrow) {
+                root.move-selection(-1);
+                return accept;
+            }
+            if (event.text == Key.Return) {
+                root.continue-pressed();
+                return accept;
+            }
+            if (event.text == Key.Escape) {
+                root.back();
+                return accept;
+            }
+            if (event.text == Key.Backspace) {
+                root.filter-backspace();
+                return accept;
+            }
+            if (event.text.character-count == 1
+                && !event.modifiers.control
+                && !event.modifiers.alt
+                && !event.modifiers.meta) {
+                root.filter-char-typed(event.text);
+                return accept;
+            }
+            reject
+        }
+    }
+}

@@ -1,0 +1,90 @@
+import { Theme } from "./theme.slint";
+import { AppWindow } from "./widgets/app-window.slint";
+import { WelcomeScreen } from "./welcome-screen.slint";
+import { LocaleScreen } from "./locale-screen.slint";
+import { ListItem } from "./locale/list-item.slint";
+
+export component FinixInstaller inherits AppWindow {
+    title: "finix installer";
+    preferred-width: Theme.window-hint-width;
+    preferred-height: Theme.window-hint-height;
+    full-screen: want-fullscreen;
+    in property <bool> want-fullscreen: true;
+    // Raised max so the layout constraints don't clamp the window to its content width.
+    max-width: 4096px;
+    max-height: 4096px;
+
+    property <int> screen: 0;
+
+    in property <string> kernel-version: "7.1.4";
+    in property <string> tty-name: "tty1";
+    in property <string> installer-version: "0.1.0";
+    in property <float> gutter-scale: 1.0;
+
+    in property <[ListItem]> locale-visible-items: [];
+    in property <int> locale-match-count: 0;
+    in property <string> locale-selected-code: "";
+    in property <int> locale-selected-index: 0;
+
+    in property <string> locale-language-value: "";
+    in property <string> locale-keyboard-value: "";
+    in property <string> locale-timezone-value: "";
+    in property <string> locale-locale-format-value: "";
+
+    in property <int> locale-active-category: 2;
+    in property <string> locale-filter-text: "";
+    in property <string> locale-load-error: "";
+
+    callback locale-category-selected(int);
+    callback locale-filter-char-typed(string);
+    callback locale-filter-backspace();
+    callback locale-item-selected(string);
+    callback locale-move-selection(int);
+    callback locale-continue-pressed();
+
+    welcome := WelcomeScreen {
+        visible: screen == 0;
+        gutter-scale: root.gutter-scale;
+        kernel-version: root.kernel-version;
+        tty-name: root.tty-name;
+        installer-version: root.installer-version;
+        install => { root.screen = 1; }
+        reboot => { root.reboot(); }
+        exit-installer => { root.exit-installer(); }
+    }
+
+    locale := LocaleScreen {
+        visible: screen == 1;
+        gutter-scale: root.gutter-scale;
+        visible-items: root.locale-visible-items;
+        match-count: root.locale-match-count;
+        selected-code: root.locale-selected-code;
+        selected-index: root.locale-selected-index;
+        language-value: root.locale-language-value;
+        keyboard-value: root.locale-keyboard-value;
+        timezone-value: root.locale-timezone-value;
+        locale-format-value: root.locale-locale-format-value;
+        active-category: root.locale-active-category;
+        filter-text: root.locale-filter-text;
+        load-error: root.locale-load-error;
+        category-selected(v) => { root.locale-category-selected(v); }
+        filter-char-typed(v) => { root.locale-filter-char-typed(v); }
+        filter-backspace() => { root.locale-filter-backspace(); }
+        item-selected(v) => { root.locale-item-selected(v); }
+        move-selection(v) => { root.locale-move-selection(v); }
+        back() => { root.screen = 0; }
+        continue-pressed() => { root.locale-continue-pressed(); }
+    }
+
+    callback reboot();
+    callback exit-installer();
+
+    forward-focus: welcome;
+    changed screen => {
+        if (screen == 0) {
+            welcome.focus();
+        } else {
+            locale.focus();
+        }
+    }
+}

@@ -1,0 +1,38 @@
+import { Theme } from "../theme.slint";
+import { Hairline } from "./hairline.slint";
+
+export component StepBar inherits Rectangle {
+    in property <string> active-step;
+
+    height: Theme.header-height;
+    horizontal-stretch: 1;
+
+    HorizontalLayout {
+        padding-left: Theme.gutter-outer;
+        padding-right: Theme.gutter-outer;
+
+        Text {
+            text: "finix";
+            color: Theme.text-primary;
+            font-size: Theme.font-title;
+            letter-spacing: 1px;
+            vertical-alignment: center;
+            horizontal-stretch: 1;
+        }
+
+        HorizontalLayout {
+            spacing: 38px;
+            Text { text: "locale"; color: active-step == "locale" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: "network"; color: active-step == "network" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: "providers"; color: active-step == "providers" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: "disk"; color: active-step == "disk" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: "account"; color: active-step == "account" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: "summary"; color: active-step == "summary" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+        }
+    }
+
+    Hairline {
+        y: parent.height - 1px;
+        width: parent.width;
+    }
+}

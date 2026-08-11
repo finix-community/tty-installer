@@ -1,0 +1,42 @@
+import { Theme } from "../theme.slint";
+
+export component CategoryRow inherits Rectangle {
+    in property <string> category-label;
+    in property <string> current-value;
+    in property <bool> active;
+    callback clicked <=> touch.clicked;
+
+    height: Theme.category-height;
+    background: touch.pressed
+        ? Theme.hover-fill.brighter(20%)
+        : (touch.has-hover && !active ? Theme.hover-fill : transparent);
+    animate background { duration: 100ms; easing: linear; }
+
+    if active : Rectangle {
+        x: 0px;
+        y: 0px;
+        width: 2px;
+        height: parent.height;
+        background: Theme.accent;
+    }
+
+    VerticalLayout {
+        padding-left: Theme.rail-pad-x;
+        padding-right: Theme.rail-pad-x;
+        padding-top: Theme.rail-pad-y;
+        spacing: Theme.rail-spacing;
+        alignment: start;
+
+        Text {
+            text: category-label;
+            font-size: Theme.font-meta;
+            color: active ? Theme.accent : Theme.text-tertiary;
+        }
+        Text {
+            text: current-value == "" ? "--" : current-value;
+            color: active ? Theme.text-primary : Theme.text-secondary;
+        }
+    }
+
+    touch := TouchArea {}
+}

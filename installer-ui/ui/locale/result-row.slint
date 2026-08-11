@@ -1,0 +1,40 @@
+import { Theme } from "../theme.slint";
+import { Hairline } from "../widgets/hairline.slint";
+
+export component ResultRow inherits Rectangle {
+    in property <string> row-code;
+    in property <string> row-label;
+    in property <bool> selected;
+    callback clicked <=> touch.clicked;
+
+    height: Theme.row-height;
+
+    HorizontalLayout {
+        spacing: 16px;
+
+        Text {
+            text: selected ? ">" : "";
+            color: Theme.accent;
+            width: Theme.arrow-col;
+            vertical-alignment: center;
+        }
+        Text {
+            text: row-label;
+            color: selected
+                ? Theme.accent
+                : (touch.pressed
+                    ? Theme.text-quiet
+                    : (touch.has-hover ? Theme.text-secondary : Theme.text-tertiary));
+            vertical-alignment: center;
+            animate color { duration: 100ms; easing: linear; }
+        }
+    }
+
+    Hairline {
+        y: parent.height - 1px;
+        width: parent.width;
+        line-color: Theme.border-subtle;
+    }
+
+    touch := TouchArea {}
+}

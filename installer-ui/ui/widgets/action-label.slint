@@ -1,0 +1,35 @@
+import { Theme } from "../theme.slint";
+
+export component ActionLabel inherits Rectangle {
+    in property <string> label;
+    in property <color> label-color;
+    in property <length> label-font-size: Theme.font-body;
+    in property <bool> selected: false;
+    callback clicked <=> touch.clicked;
+
+    y: touch.pressed ? 1px : 0px;
+    animate y { duration: 60ms; easing: ease-out; }
+
+    border-width: 1px;
+    border-color: selected ? label-color : transparent;
+    border-radius: 0px;
+    animate border-color { duration: 100ms; easing: linear; }
+
+    HorizontalLayout {
+        padding-top: Theme.action-pad-y;
+        padding-bottom: Theme.action-pad-y;
+        padding-left: Theme.action-pad-x;
+        padding-right: Theme.action-pad-x;
+
+        Text {
+            text: label;
+            color: touch.pressed
+                ? label-color.darker(15%)
+                : (touch.has-hover ? label-color.brighter(30%) : label-color);
+            font-size: label-font-size;
+            animate color { duration: 100ms; easing: linear; }
+        }
+    }
+
+    touch := TouchArea {}
+}

@@ -1,0 +1,28 @@
+[package]
+name = "installer-ui"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+slint = { version = "1.17", default-features = false, features = ["std", "compat-1-2"] }
+installer-core = { path = "../installer-core" }
+
+[build-dependencies]
+slint-build = "1.17"
+
+[features]
+default = ["dev"]
+dev = ["dep:winit", "dep:i-slint-backend-winit", "slint/backend-winit", "slint/renderer-femtovg"]
+# kms: linuxkms backend + software renderer, no GPU driver needed - safest on fresh hardware.
+kms = ["slint/backend-linuxkms", "slint/renderer-software"]
+
+[dependencies.winit]
+version = "0.30"
+optional = true
+# Only for Backend::builder()'s window attributes hook and WinitWindowAccessor; slint does not
+# re-export either. Must match the winit version Slint 1.17's backend-winit uses internally - check Cargo.lock on mismatch.
+
+[dependencies.i-slint-backend-winit]
+version = "1.17.1"
+optional = true
+# Pin to the exact slint patch version.
