@@ -1,5 +1,6 @@
 use std::fs;
 
+pub mod input;
 pub mod system_lists;
 
 #[derive(Debug, Clone)]

@@ -65,8 +65,11 @@ pub fn setup(ui: &FinixInstaller) -> Result<(), slint::PlatformError> {
         let selection = selection.clone();
         ui.on_locale_filter_char_typed(move |ch| {
             if let Some(ui) = ui_weak.upgrade() {
+                let Some(c) = installer_core::input::printable_char(ch.as_str()) else {
+                    return;
+                };
                 let mut selection = selection.borrow_mut();
-                selection.filter.push_str(ch.as_str());
+                selection.filter.push(c);
                 refresh(&ui, &lists, &selection);
             }
         });
