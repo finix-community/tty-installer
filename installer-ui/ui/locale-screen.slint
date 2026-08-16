@@ -27,6 +27,22 @@ export component LocaleScreen inherits Rectangle {
     in property <string> filter-text: "";
     in property <string> load-error: "";
 
+    in property <string> language-category: "language";
+    in property <string> keyboard-category: "keyboard layout";
+    in property <string> timezone-category: "timezone";
+    in property <string> locale-format-category: "locale format";
+    in property <string> matches-label: "";
+    in property <string> no-matches-label: "no matching entries";
+    in property <string> back-label: "< back";
+    in property <string> continue-label: "continue >";
+
+    in property <string> step-locale: "locale";
+    in property <string> step-network: "network";
+    in property <string> step-providers: "providers";
+    in property <string> step-disk: "disk";
+    in property <string> step-account: "account";
+    in property <string> step-summary: "summary";
+
     callback category-selected(int);
     callback filter-char-typed(string);
     callback filter-backspace();
@@ -42,7 +58,15 @@ export component LocaleScreen inherits Rectangle {
     }
 
     VerticalLayout {
-        StepBar { active-step: "locale"; }
+        StepBar {
+            active-step: "locale";
+            locale-step: root.step-locale;
+            network-step: root.step-network;
+            providers-step: root.step-providers;
+            disk-step: root.step-disk;
+            account-step: root.step-account;
+            summary-step: root.step-summary;
+        }
 
         HorizontalLayout {
             vertical-stretch: 1;
@@ -56,25 +80,25 @@ export component LocaleScreen inherits Rectangle {
                     alignment: start;
 
                     CategoryRow {
-                        category-label: "language";
+                        category-label: language-category;
                         current-value: language-value;
                         active: active-category == 0;
                         clicked => { root.category-selected(0); }
                     }
                     CategoryRow {
-                        category-label: "keyboard layout";
+                        category-label: keyboard-category;
                         current-value: keyboard-value;
                         active: active-category == 1;
                         clicked => { root.category-selected(1); }
                     }
                     CategoryRow {
-                        category-label: "timezone";
+                        category-label: timezone-category;
                         current-value: timezone-value;
                         active: active-category == 2;
                         clicked => { root.category-selected(2); }
                     }
                     CategoryRow {
-                        category-label: "locale format";
+                        category-label: locale-format-category;
                         current-value: locale-format-value;
                         active: active-category == 3;
                         clicked => { root.category-selected(3); }
@@ -120,7 +144,7 @@ export component LocaleScreen inherits Rectangle {
                             background: Theme.accent;
                         }
                         Text {
-                            text: "\{match-count} matches";
+                            text: matches-label;
                             color: Theme.text-tertiary;
                             font-size: Theme.font-info;
                             vertical-alignment: center;
@@ -144,7 +168,7 @@ export component LocaleScreen inherits Rectangle {
                     if load-error == "" && filter-text != "" && match-count == 0 : VerticalLayout {
                         padding-top: 12px;
                         Text {
-                            text: "no matching entries";
+                            text: no-matches-label;
                             color: Theme.text-tertiary;
                             font-size: Theme.font-info;
                         }
@@ -174,7 +198,7 @@ export component LocaleScreen inherits Rectangle {
                 alignment: space-between;
 
                 Text {
-                    text: "\{match-count} matches";
+                    text: matches-label;
                     color: Theme.text-quiet;
                     font-size: Theme.font-info;
                     vertical-alignment: center;
@@ -183,12 +207,12 @@ export component LocaleScreen inherits Rectangle {
                 HorizontalLayout {
                     spacing: Theme.gutter-outer;
                     ActionLabel {
-                        label: "< back";
+                        label: back-label;
                         label-color: Theme.text-tertiary;
                         clicked => { root.back(); }
                     }
                     ActionLabel {
-                        label: "continue >";
+                        label: continue-label;
                         label-color: Theme.accent;
                         clicked => { root.continue-pressed(); }
                     }

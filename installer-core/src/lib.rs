@@ -1,7 +1,14 @@
 use std::fs;
 
+#[macro_use]
+extern crate rust_i18n;
+
+i18n!("locales", fallback = "en-US");
+
 pub mod input;
+pub mod languages;
 pub mod system_lists;
+pub mod translations;
 
 #[derive(Debug, Clone)]
 pub struct SystemInfo {

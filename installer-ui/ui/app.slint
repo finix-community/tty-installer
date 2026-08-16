@@ -5,7 +5,7 @@ import { LocaleScreen } from "./locale-screen.slint";
 import { ListItem } from "./locale/list-item.slint";
 
 export component FinixInstaller inherits AppWindow {
-    title: "finix installer";
+    title: welcome-title;
     preferred-width: Theme.window-hint-width;
     preferred-height: Theme.window-hint-height;
     full-screen: want-fullscreen;
@@ -20,6 +20,31 @@ export component FinixInstaller inherits AppWindow {
     in property <string> tty-name: "tty1";
     in property <string> installer-version: "0.1.0";
     in property <float> gutter-scale: 1.0;
+
+    in property <string> welcome-title: "finix installer";
+    in property <string> welcome-tagline: "a daily-drivable experiment in what nixos could look like,";
+    in property <string> welcome-subtitle: "running finit as pid 1.";
+    in property <string> welcome-install-label: "install >";
+    in property <string> welcome-reboot-label: "reboot";
+    in property <string> welcome-exit-label: "exit";
+    in property <string> welcome-system-line: "linux";
+    in property <string> welcome-version-line: "finix-installer";
+
+    in property <string> locale-language-category: "language";
+    in property <string> locale-keyboard-category: "keyboard layout";
+    in property <string> locale-timezone-category: "timezone";
+    in property <string> locale-format-category: "locale format";
+    in property <string> locale-matches-label: "";
+    in property <string> locale-no-matches-label: "no matching entries";
+    in property <string> locale-back-label: "< back";
+    in property <string> locale-continue-label: "continue >";
+
+    in property <string> step-locale: "locale";
+    in property <string> step-network: "network";
+    in property <string> step-providers: "providers";
+    in property <string> step-disk: "disk";
+    in property <string> step-account: "account";
+    in property <string> step-summary: "summary";
 
     in property <[ListItem]> locale-visible-items: [];
     in property <int> locale-match-count: 0;
@@ -45,9 +70,14 @@ export component FinixInstaller inherits AppWindow {
     welcome := WelcomeScreen {
         visible: screen == 0;
         gutter-scale: root.gutter-scale;
-        kernel-version: root.kernel-version;
-        tty-name: root.tty-name;
-        installer-version: root.installer-version;
+        title: root.welcome-title;
+        tagline: root.welcome-tagline;
+        subtitle: root.welcome-subtitle;
+        install-label: root.welcome-install-label;
+        reboot-label: root.welcome-reboot-label;
+        exit-label: root.welcome-exit-label;
+        system-line: root.welcome-system-line;
+        version-line: root.welcome-version-line;
         install => { root.screen = 1; }
         reboot => { root.reboot(); }
         exit-installer => { root.exit-installer(); }
@@ -67,6 +97,20 @@ export component FinixInstaller inherits AppWindow {
         active-category: root.locale-active-category;
         filter-text: root.locale-filter-text;
         load-error: root.locale-load-error;
+        language-category: root.locale-language-category;
+        keyboard-category: root.locale-keyboard-category;
+        timezone-category: root.locale-timezone-category;
+        locale-format-category: root.locale-format-category;
+        matches-label: root.locale-matches-label;
+        no-matches-label: root.locale-no-matches-label;
+        back-label: root.locale-back-label;
+        continue-label: root.locale-continue-label;
+        step-locale: root.step-locale;
+        step-network: root.step-network;
+        step-providers: root.step-providers;
+        step-disk: root.step-disk;
+        step-account: root.step-account;
+        step-summary: root.step-summary;
         category-selected(v) => { root.locale-category-selected(v); }
         filter-char-typed(v) => { root.locale-filter-char-typed(v); }
         filter-backspace() => { root.locale-filter-backspace(); }

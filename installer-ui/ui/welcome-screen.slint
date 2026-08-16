@@ -7,10 +7,16 @@ export component WelcomeScreen inherits Rectangle {
     height: 100%;
     forward-focus: key-handler;
 
-    in property <string> kernel-version: "7.1.4";
-    in property <string> tty-name: "tty1";
-    in property <string> installer-version: "0.1.0";
     in property <float> gutter-scale: 1.0;
+
+    in property <string> title: "finix installer";
+    in property <string> tagline: "a daily-drivable experiment in what nixos could look like,";
+    in property <string> subtitle: "running finit as pid 1.";
+    in property <string> install-label: "install >";
+    in property <string> reboot-label: "reboot";
+    in property <string> exit-label: "exit";
+    in property <string> system-line: "linux";
+    in property <string> version-line: "finix-installer";
 
     property <int> selected-index: 0;
 
@@ -38,13 +44,13 @@ export component WelcomeScreen inherits Rectangle {
                 }
 
                 Text {
-                    text: "finix installer";
+                    text: title;
                     color: Theme.text-tertiary;
                     vertical-alignment: center;
                     horizontal-stretch: 1;
                 }
                 Text {
-                    text: "linux " + kernel-version + " · " + tty-name;
+                    text: system-line;
                     color: Theme.text-disabled;
                     font-size: Theme.font-info;
                     vertical-alignment: center;
@@ -79,12 +85,12 @@ export component WelcomeScreen inherits Rectangle {
                 VerticalLayout {
                     spacing: 6px;
                     Text {
-                        text: "a daily-drivable experiment in what nixos could look like,";
+                        text: tagline;
                         color: Theme.text-secondary;
                         font-size: Theme.font-meta;
                     }
                     Text {
-                        text: "running finit as pid 1.";
+                        text: subtitle;
                         color: Theme.text-secondary;
                         font-size: Theme.font-meta;
                     }
@@ -101,21 +107,21 @@ export component WelcomeScreen inherits Rectangle {
                     alignment: start;
 
                     ActionLabel {
-                        label: "install >";
+                        label: install-label;
                         label-color: Theme.accent;
                         label-font-size: Theme.font-title;
                         selected: selected-index == 0;
                         clicked => { root.selected-index = 0; root.install(); }
                     }
                     ActionLabel {
-                        label: "reboot";
+                        label: reboot-label;
                         label-color: Theme.text-quiet;
                         label-font-size: Theme.font-meta;
                         selected: selected-index == 1;
                         clicked => { root.selected-index = 1; root.reboot(); }
                     }
                     ActionLabel {
-                        label: "exit";
+                        label: exit-label;
                         label-color: Theme.text-quiet;
                         label-font-size: Theme.font-meta;
                         selected: selected-index == 2;
@@ -131,7 +137,7 @@ export component WelcomeScreen inherits Rectangle {
 
             Text {
                 x: Theme.gutter-outer;
-                text: "finix-installer " + installer-version;
+                text: version-line;
                 color: Theme.text-faint;
                 font-size: Theme.font-info;
                 vertical-alignment: center;

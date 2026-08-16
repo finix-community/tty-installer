@@ -1,0 +1,29 @@
+welcome:
+  title: "finix installer"
+  tagline: "a daily-drivable experiment in what nixos could look like,"
+  subtitle: "running finit as pid 1."
+  install: "install >"
+  reboot: "reboot"
+  exit: "exit"
+  system_line: "linux %{kernel} · %{tty}"
+  version_line: "finix-installer %{version}"
+step:
+  locale: "locale"
+  network: "network"
+  providers: "providers"
+  disk: "disk"
+  account: "account"
+  summary: "summary"
+locale:
+  category:
+    language: "language"
+    keyboard: "keyboard layout"
+    timezone: "timezone"
+    format: "locale format"
+  back: "< back"
+  continue: "continue >"
+  no_matches: "no matching entries"
+  matches:
+    zero: "no matches"
+    one: "%{count} match"
+    many: "%{count} matches"

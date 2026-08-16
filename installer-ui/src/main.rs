@@ -1,5 +1,6 @@
 slint::include_modules!();
 
+mod i18n;
 mod locale;
 mod platform;
 mod welcome_screen;

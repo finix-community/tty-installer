@@ -18,6 +18,7 @@ pub(super) fn refresh(ui: &FinixInstaller, lists: &LocaleLists, selection: &Loca
     ui.set_locale_selected_code(SharedString::from(current_code));
     ui.set_locale_active_category(selection.active as i32);
     ui.set_locale_filter_text(SharedString::from(selection.filter.as_str()));
+    crate::i18n::refresh_matches_label(ui);
 
     ui.set_locale_language_value(SharedString::from(selection.language.as_str()));
     ui.set_locale_keyboard_value(SharedString::from(selection.keyboard.as_str()));

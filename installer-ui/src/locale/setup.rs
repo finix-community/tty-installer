@@ -10,11 +10,7 @@ use std::rc::Rc;
 
 pub fn setup(ui: &FinixInstaller) -> Result<(), slint::PlatformError> {
     let mut load_error = None;
-    let language = lists::locale_pairs(lists::load_or_warn(
-        "locales",
-        system_lists::list_locales(),
-        &mut load_error,
-    ));
+    let language = lists::language_pairs(installer_core::languages::installer_languages());
     let keyboard = lists::keyboard_pairs(lists::load_or_warn(
         "keyboard layouts",
         system_lists::list_keyboard_layouts(),
@@ -25,11 +21,15 @@ pub fn setup(ui: &FinixInstaller) -> Result<(), slint::PlatformError> {
         system_lists::list_timezones(),
         &mut load_error,
     ));
-    let locale_format = language.clone();
+    let locale_format = lists::locale_pairs(lists::load_or_warn(
+        "locales",
+        system_lists::list_locales(),
+        &mut load_error,
+    ));
     ui.set_locale_load_error(load_error.unwrap_or_default().into());
 
     let selection = Rc::new(RefCell::new(LocaleSelection {
-        language: String::new(),
+        language: installer_core::translations::current_locale(),
         keyboard: String::new(),
         timezone: String::new(),
         locale_format: String::new(),
@@ -95,6 +95,11 @@ pub fn setup(ui: &FinixInstaller) -> Result<(), slint::PlatformError> {
                 let mut selection = selection.borrow_mut();
                 let active = selection.active;
                 set_selected_code(&mut selection, active, code.to_string());
+                if active == Category::Language
+                    && installer_core::translations::set_ui_locale(&code)
+                {
+                    crate::i18n::apply(&ui);
+                }
                 if active != Category::LocaleFormat {
                     selection.active = active.next();
                     selection.filter.clear();

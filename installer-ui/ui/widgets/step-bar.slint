@@ -4,6 +4,13 @@ import { Hairline } from "./hairline.slint";
 export component StepBar inherits Rectangle {
     in property <string> active-step;
 
+    in property <string> locale-step: "locale";
+    in property <string> network-step: "network";
+    in property <string> providers-step: "providers";
+    in property <string> disk-step: "disk";
+    in property <string> account-step: "account";
+    in property <string> summary-step: "summary";
+
     height: Theme.header-height;
     horizontal-stretch: 1;
 
@@ -22,12 +29,12 @@ export component StepBar inherits Rectangle {
 
         HorizontalLayout {
             spacing: 38px;
-            Text { text: "locale"; color: active-step == "locale" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
-            Text { text: "network"; color: active-step == "network" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
-            Text { text: "providers"; color: active-step == "providers" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
-            Text { text: "disk"; color: active-step == "disk" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
-            Text { text: "account"; color: active-step == "account" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
-            Text { text: "summary"; color: active-step == "summary" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: locale-step; color: active-step == "locale" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: network-step; color: active-step == "network" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: providers-step; color: active-step == "providers" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: disk-step; color: active-step == "disk" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: account-step; color: active-step == "account" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
+            Text { text: summary-step; color: active-step == "summary" ? Theme.accent : Theme.text-quiet; font-size: Theme.font-info; vertical-alignment: center; }
         }
     }
 

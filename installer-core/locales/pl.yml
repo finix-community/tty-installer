@@ -1,0 +1,29 @@
+welcome:
+  title: "instalator finix"
+  tagline: "eksperyment nadający się do codziennego użytku pokazujący, jak mógłby wyglądać nixos,"
+  subtitle: "z finit jako PID 1."
+  install: "instaluj >"
+  reboot: "restart"
+  exit: "wyjście"
+  system_line: "linux %{kernel} · %{tty}"
+  version_line: "finix-installer %{version}"
+step:
+  locale: "lokalizacja"
+  network: "sieć"
+  providers: "repozytoria"
+  disk: "dysk"
+  account: "konto"
+  summary: "podsumowanie"
+locale:
+  category:
+    language: "język"
+    keyboard: "układ klawiatury"
+    timezone: "strefa czasowa"
+    format: "format lokalizacji"
+  back: "< wstecz"
+  continue: "dalej >"
+  no_matches: "brak pasujących wpisów"
+  matches:
+    zero: "brak dopasowań"
+    one: "%{count} dopasowanie"
+    many: "%{count} dopasowań"

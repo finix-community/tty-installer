@@ -4,6 +4,13 @@ use installer_core::system_lists::{
 
 pub(super) type Pairs = Vec<(String, String)>;
 
+pub(super) fn language_pairs(entries: &[(&str, &str)]) -> Pairs {
+    entries
+        .iter()
+        .map(|(code, label)| (code.to_string(), label.to_string()))
+        .collect()
+}
+
 pub(super) fn load_or_warn<T>(
     label: &str,
     result: Result<Vec<T>, SystemListError>,
